@@ -1,0 +1,21 @@
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+p{
+    font-size: 1.4em;
+}
+.subcontainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-content: center;
+    align-items: center;
+    margin: 0.5em;
+}
+.text{
+color: rgb(247, 231, 195);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
