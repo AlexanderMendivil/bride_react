@@ -3,9 +3,11 @@ import { modalStyle } from '../styles/modalStyle';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { addGuest } from '../apis/addUser';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { IGuest } from '../interface/guest';
 import { updataGuest } from '../apis/updataGuest';
+import { AppContext } from '../context/AppContext';
+import { v4 as uuidv4 } from 'uuid';
 
   interface AddGuestModalProps{
     modalState: boolean
@@ -14,6 +16,7 @@ import { updataGuest } from '../apis/updataGuest';
     title?: string
   }
 export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGuestModalProps) => {
+  const { setNewAddedGuest, guests, setNewGuests } = useContext(AppContext)
     const [ loading, setLoading ] = useState<boolean>(false)
     const [ successAdd, setSuccessAdd ] = useState<boolean>(false)
     const [ successEdit, setSuccessEdit ] = useState<boolean>(false)
@@ -31,10 +34,14 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
             try{
                 setLoading(true)
                 if(!guest){
-                    await addGuest(values)
+                  const newGuest = {id: uuidv4(), ...values}
+                    await addGuest(newGuest)
+                    setNewAddedGuest(newGuest)
                     setSuccessAdd(true)
                 }else{
                     await updataGuest({id: guest.id, ...values})
+                    const newArray = guests.map(guestMap => guestMap.id === guest.id ? guest : guestMap);
+                    setNewGuests(newArray)
                     setSuccessEdit(true)
 
                 }

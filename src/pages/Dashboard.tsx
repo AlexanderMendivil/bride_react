@@ -1,34 +1,31 @@
-import { Button, CircularProgress, Snackbar, Typography } from '@mui/material';
+import { Button, CircularProgress, Container, Drawer, Snackbar, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import { DataGrid, GridRowSelectionModel } from '@mui/x-data-grid';
-import { useEffect, useState } from 'react';
-import { getGuests } from '../apis/getGuests';
+import { useContext, useState } from 'react';
 import { AddGuestModal } from '../components/AddGuestModal';
 import { columns } from '../utils/columnHeaders';
 import { IGuest } from '../interface/guest';
 import { deleteGuests } from '../apis/deleteGuest';
+import { AppContext } from '../context/AppContext';
+import AddIcon from '@mui/icons-material/Add';
 
 export const Dashboard = () => {
 
-  const [guests, setGuest] = useState<IGuest[]>([])
+  const { guests, setNewGuests, logout } = useContext(AppContext)
+
   const [modal, setModal] = useState<boolean>(false)
   const [modalEdit, setModalEdit] = useState<boolean>(false)
+  const [openDrawer, setOpenDrawer] = useState<boolean>(false)
   const [ loading, setLoading ] = useState<boolean>(false)
   const [ error, setError ] = useState<boolean>(false)
   const [ deleted, setDeleted ] = useState<boolean>(false)
   const [guestEdit, setGuestEdit] = useState<IGuest>()
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
-
-  useEffect(() => {
-    const getData = async () =>{
-      const data = await getGuests() 
-      setGuest(data)
-    }
-    getData()
-  }, [])
   
   const handleModal = () => setModal(!modal)
   const handleModalEdit = () => setModalEdit(!modalEdit)
+  const toggleDrawer = () => setOpenDrawer(!openDrawer)
+  
   
   const deleteItems = async () =>{
     try{
@@ -36,7 +33,7 @@ export const Dashboard = () => {
       setLoading(true)
       await deleteGuests(rowSelectionModel)
       const remainGuest = guests.filter( guest => !rowSelectionModel.includes( guest.id! ));
-      setGuest(remainGuest)
+      setNewGuests(remainGuest)
       setDeleted(true)
 
     }catch(e){
@@ -50,16 +47,19 @@ export const Dashboard = () => {
   }
 
   const setEditOptions = (row: any) => {
-    const guest = {
-      id: row.id,
-      nombre: row.nombre,
-      num_invitados: row.num_invitados,
-      status: row.status,
-      email: row.email,
-      phone_number: row.phone_number,
-    }
-    setGuestEdit(guest)
-    handleModalEdit()
+    setGuestEdit(undefined)
+    setTimeout(()=>{
+      const guest = {
+        id: row.id,
+        nombre: row.nombre,
+        num_invitados: row.num_invitados,
+        status: row.status,
+        email: row.email,
+        phone_number: row.phone_number,
+      }
+      setGuestEdit(guest)
+      handleModalEdit()
+    }, 1)
   }
 
   return (
@@ -76,8 +76,26 @@ export const Dashboard = () => {
             /> :  null}
       <Typography variant='h3'>¡Agrega a tus invitados!</Typography>
       <Box sx={{width: '80%', display: 'flex', justifyContent: 'flex-end', marginBottom: 1}}>
-        <Button sx={{marginRight: 2}} variant="outlined" onClick={handleModal}>Agregar</Button>
-        <Button disabled={rowSelectionModel.length <= 0} variant="outlined" color='error' onClick={deleteItems}>{loading ? <CircularProgress size={20}/> : 'Eliminar'}</Button>
+        <Button sx={{marginRight: 3}} disabled={rowSelectionModel.length <= 0} variant="outlined" color='error' onClick={deleteItems}>{loading ? <CircularProgress size={20}/> : 'Eliminar'}</Button>
+        <Button variant="outlined" onClick={toggleDrawer}>Menu</Button>
+      
+        <Drawer
+            anchor={"right"}
+            open={openDrawer}
+            onClose={toggleDrawer}
+            >
+              <Box sx={{display: 'flex', flexDirection: 'column', width: 300, height: '100%', justifyContent: 'space-between', alignItems: 'center'}}>
+              
+              <Container sx={{display: 'flex', flexDirection: 'column',alignItems: 'center', marginTop: 5}}>
+                <Typography>Bodas app</Typography>
+                <Button sx={{width: '80%', justifySelf: 'center', marginTop:2}} variant="outlined" onClick={handleModal}>
+                <AddIcon/>
+                  Agregar
+                  </Button>
+              </Container>
+                <Button sx={{width: '80%', justifySelf: 'center', marginBottom: 3}} color='error' onClick={logout}>Logout</Button>
+              </Box>
+          </Drawer>
       </Box>
       <DataGrid
       sx={{height: '50%', width: '80%' }}

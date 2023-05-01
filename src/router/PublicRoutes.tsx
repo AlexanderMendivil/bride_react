@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { Navigate } from "react-router-dom";
 
 interface PublicRoutesProps{
