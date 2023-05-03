@@ -8,6 +8,7 @@ import { IGuest } from '../interface/guest';
 import { deleteGuests } from '../apis/deleteGuest';
 import { AppContext } from '../context/AppContext';
 import AddIcon from '@mui/icons-material/Add';
+import { inviteGuests } from '../apis/inviteGuests';
 
 export const Dashboard = () => {
 
@@ -19,6 +20,7 @@ export const Dashboard = () => {
   const [ loading, setLoading ] = useState<boolean>(false)
   const [ error, setError ] = useState<boolean>(false)
   const [ deleted, setDeleted ] = useState<boolean>(false)
+  const [ invited, setInvited ] = useState<boolean>(false)
   const [guestEdit, setGuestEdit] = useState<IGuest>()
   const [rowSelectionModel, setRowSelectionModel] = useState<GridRowSelectionModel>([]);
   
@@ -42,6 +44,23 @@ export const Dashboard = () => {
       setLoading(false)
       setTimeout(()=> setError(false), 3000)
       setTimeout(()=> setDeleted(false), 3000)
+
+    }
+  }
+
+  const invite = async () =>{
+    try{
+      
+      setLoading(true)
+      await inviteGuests(rowSelectionModel)
+      setInvited(true)
+
+    }catch(e){
+      setError(true)
+    }finally{
+      setLoading(false)
+      setTimeout(()=> setError(false), 3000)
+      setTimeout(()=> setInvited(false), 3000)
 
     }
   }
@@ -73,6 +92,11 @@ export const Dashboard = () => {
                             open={deleted}
                             autoHideDuration={3000}
                             message="Eliminado con exito"
+            /> :  null}
+            { invited  ? <Snackbar
+                            open={invited}
+                            autoHideDuration={3000}
+                            message="Invitados con exito"
             /> :  null}
       <Typography variant='h3'>¡Agrega a tus invitados!</Typography>
       <Box sx={{width: '80%', display: 'flex', justifyContent: 'flex-end', marginBottom: 1}}>
@@ -119,6 +143,9 @@ export const Dashboard = () => {
         }}
         rowSelectionModel={rowSelectionModel}
         />
+        <Box sx={{width: '80%', display: 'flex', justifyContent: 'flex-end'}}>
+          <Button sx={{marginTop: 1, marginBottom: 1}} disabled={rowSelectionModel.length <= 0} variant="outlined" color='success' onClick={invite}>{loading ? <CircularProgress size={20}/> : 'Invitar'}</Button>
+        </Box>
         <AddGuestModal modalState={modal} handleModal={handleModal} title='Agregar'/>
         {guestEdit !== undefined && <AddGuestModal modalState={modalEdit} handleModal={handleModalEdit} guest={guestEdit} title='Editar'/>}
   </Box>
