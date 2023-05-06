@@ -8,6 +8,7 @@ import { IGuest } from '../interface/guest';
 import { updataGuest } from '../apis/updataGuest';
 import { AppContext } from '../context/AppContext';
 import { v4 as uuidv4 } from 'uuid';
+import CloseIcon from '@mui/icons-material/Close';
 
   interface AddGuestModalProps{
     modalState: boolean
@@ -57,16 +58,13 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
         },
         validationSchema: Yup.object({
             
-            nombre: Yup.string()
-                .required('Campo requerido'),
+            nombre: Yup.string().matches(/^[a-zA-Z]+$/, 'Nombre debe contener solo letras').required('Campo requerido'),
             num_invitados: Yup.number().required('Campo requerido'),
             status: Yup.string().required('Campo requerido'),
             email: Yup.string()
             .email('El correo no tiene un formato válido')
             .required('Campo requerido'),
             phone_number: Yup.string().matches(/^\+?[1-9]\d{1,14}$/, 'Número de telefono invalido').required('Campo requerido'),
-            
-                
         })
     });
   return (
@@ -92,6 +90,9 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                             autoHideDuration={3000}
                             message="Editado con exito"
             /> :  null}
+            <Box sx={{display: 'flex', justifyContent:'flex-end'}}>
+              <Button color='error' onClick={handleModal}><CloseIcon/></Button>
+            </Box>
             <Typography variant='h5' sx={{marginBottom: 3}}>{title}</Typography>
             <form onSubmit={formik.handleSubmit}>
             <Grid container spacing={2}>
@@ -102,6 +103,7 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                   id="nombre"
                   name="nombre"
                   label="Nombre"
+                  type='text'
                   value={formik.values.nombre}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -114,6 +116,9 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                   name="num_invitados"
                   label="Número de invitados"
                   type='number'
+                  InputProps={{
+                    inputProps: { min: 0 }
+                  }}
                   value={formik.values.num_invitados}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
@@ -131,8 +136,6 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                    error={formik.touched.status && Boolean(formik.errors.status)}
                  >
                    <MenuItem value={'Pendiente'}>Pendiente</MenuItem>
-                   <MenuItem value={'Rechazada'}>Rechazada</MenuItem>
-                   <MenuItem value={'Aceptada'}>Aceptada</MenuItem>
                  </Select>
                 </FormControl>
                 </Grid>
