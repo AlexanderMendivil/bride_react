@@ -18,6 +18,7 @@ export const Dashboard = () => {
   const [modalEdit, setModalEdit] = useState<boolean>(false)
   const [openDrawer, setOpenDrawer] = useState<boolean>(false)
   const [ loading, setLoading ] = useState<boolean>(false)
+  const [ loadingInvite, setLoadingInvite ] = useState<boolean>(false)
   const [ error, setError ] = useState<boolean>(false)
   const [ deleted, setDeleted ] = useState<boolean>(false)
   const [ invited, setInvited ] = useState<boolean>(false)
@@ -51,14 +52,14 @@ export const Dashboard = () => {
   const invite = async () =>{
     try{
       
-      setLoading(true)
+      setLoadingInvite(true)
       await inviteGuests(rowSelectionModel)
       setInvited(true)
 
     }catch(e){
       setError(true)
     }finally{
-      setLoading(false)
+      setLoadingInvite(false)
       setTimeout(()=> setError(false), 3000)
       setTimeout(()=> setInvited(false), 3000)
 
@@ -100,7 +101,7 @@ export const Dashboard = () => {
             /> :  null}
       <Typography variant='h3'>¡Agrega a tus invitados!</Typography>
       <Box sx={{width: '80%', display: 'flex', justifyContent: 'flex-end', marginBottom: 1}}>
-        <Button sx={{marginRight: 3}} disabled={rowSelectionModel.length <= 0} variant="outlined" color='error' onClick={deleteItems}>{loading ? <CircularProgress size={20}/> : 'Eliminar'}</Button>
+        <Button sx={{marginRight: 3}} disabled={rowSelectionModel.length <= 0 || loading } variant="outlined" color='error' onClick={deleteItems}>{loading ? <CircularProgress size={20}/> : 'Eliminar'}</Button>
         <Button variant="outlined" onClick={toggleDrawer}>Menu</Button>
       
         <Drawer
@@ -144,7 +145,7 @@ export const Dashboard = () => {
         rowSelectionModel={rowSelectionModel}
         />
         <Box sx={{width: '80%', display: 'flex', justifyContent: 'flex-end'}}>
-          <Button sx={{marginTop: 1, marginBottom: 1}} disabled={rowSelectionModel.length <= 0} variant="outlined" color='success' onClick={invite}>{loading ? <CircularProgress size={20}/> : 'Invitar'}</Button>
+          <Button sx={{marginTop: 1, marginBottom: 1}} disabled={rowSelectionModel.length <= 0 || loadingInvite } variant="outlined" color='success' onClick={invite}>{loadingInvite ? <CircularProgress size={20}/> : 'Invitar'}</Button>
         </Box>
         <AddGuestModal modalState={modal} handleModal={handleModal} title='Agregar'/>
         {guestEdit !== undefined && <AddGuestModal modalState={modalEdit} handleModal={handleModalEdit} guest={guestEdit} title='Editar'/>}
