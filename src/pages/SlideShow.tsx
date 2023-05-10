@@ -1,4 +1,10 @@
-import { Fade, Slide } from 'react-slideshow-image';
+import { useEffect, useState } from 'react';
+import { Slide } from 'react-slideshow-image';
+import { IGuest } from '../interface/guest';
+import { getOneGuest } from '../apis/getOneUser';
+import { useParams } from 'react-router-dom';
+import { Button, CircularProgress } from '@mui/material';
+import { confirmInvite } from '../apis/confirmInvite';
 
 const slides = [
     {
@@ -19,21 +25,70 @@ const slides = [
   ];
 
 export const SlideShow = () => {
+
+  const [ guest, setGuest ] = useState< IGuest | null >(null)
+  const [ loadingSuccess, setLoadingSuccess ] = useState<boolean>(false)
+  const [ loadingError, setLoadingError ] = useState<boolean>(false)
+  let { userId } = useParams();
+  useEffect(()=>{
+    const getGuest = async () => {
+      const guest = await getOneGuest(userId!)
+      setGuest(guest)
+    }
+    getGuest()
+  })
+
+  const confirmSuccess = async () => {
+    try{
+      setLoadingSuccess(true)
+      await confirmInvite(userId!, 'Aceptada')
+    }catch(e){
+
+    }finally{
+      setLoadingSuccess(false)
+    }
+  }
+  const confirmError = async () => {
+    try{
+      setLoadingError(true)
+      await confirmInvite(userId!, 'Rechazada')
+    }catch(e){
+  
+    }finally{
+      setLoadingError(false)
+
+    }
+  }
   return (
-    <Slide
-  arrows={false}
-  transitionDuration={1000}
-  indicators={true}
-  infinite={true}
->
-  {slides.map((slide) => (
-    <div key={slide.id} className="each-fade">
-      <div style={{width: '100%', height: '100%'}}>
-        <img style={{width: '100%', height: '100%'}} src={slide.image} alt={slide.caption} />
-      </div>
-      <p>{slide.caption}</p>
-    </div>
-  ))}
-</Slide>
+    <>
+    {guest ? 
+    <>
+      {/* <Slide
+      arrows={false}
+      transitionDuration={1000}
+      indicators={true}
+      infinite={true}
+      >
+      {slides.map((slide) => (
+        <div key={slide.id} className="each-fade">
+          <div style={{width: '100%', height: '100%'}}>
+            <img style={{width: '100%', height: '100%'}} src={slide.image} alt={slide.caption} />
+          </div>
+          <p>{slide.caption}</p>
+        </div>
+      ))}
+    </Slide> */}
+
+    <Button disabled={loadingSuccess} variant='outlined' color='error' onClick={confirmSuccess}>
+        {loadingSuccess ? <CircularProgress size={20}/> :'Aceptar'}
+    </Button>
+    <Button disabled={loadingError} variant='outlined' color='success' onClick={confirmError}>
+        {loadingError? <CircularProgress size={20}/> :'Rechazar'}
+    </Button>
+      </>
+
+    :
+    <div>cargando...</div>}
+  </>
   )
 }

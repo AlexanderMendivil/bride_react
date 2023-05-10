@@ -12,7 +12,7 @@ export const AppRouter = () => {
 
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/slideshow" element={<SlideShow/>} />
+      <Route path="/slideshow/:userId" element={<SlideShow/>} />
       <Route path="/*" element={
       <PublicRoutes>
         <AuthRoutes/>
