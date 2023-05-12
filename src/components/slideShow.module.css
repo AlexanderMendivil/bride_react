@@ -1,0 +1,68 @@
+html {
+    /* Este selector es para que el scroll se detenga en cada uno de los slides */
+    scroll-snap-type: y mandatory;
+}
+
+body {
+    font-family: 'Montserrat';
+}
+
+.slideOne,
+.slideTwo,
+.slideThree,
+.botones {
+    /* Tamaño del slide y manejo del scroll */
+    width: 100%;
+    height: 100vh;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+
+    /* Diseño para los slides */
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+}
+
+.opacity {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+  
+.invitation_heading {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+  
+.invitation_text {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.botones button {
+    margin-bottom: 1.5rem;
+    padding: 1rem 5rem;
+    border-radius: 1.5rem;
+}
+
+.slideOne {
+    background-image: url('../../assets/images/picture1.jpeg');
+}
+
+.slideTwo {
+    background-image: url('../../assets/images/picture6.jpeg');
+}
+
+.slideThree {
+    background-image: url('../../assets/images/picture8.jpeg');
+}
+
+.botones {
+    background-image: url('../../assets/images/picture16.jpeg');
+}
