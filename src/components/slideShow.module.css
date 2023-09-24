@@ -26,18 +26,45 @@ body {
 .opacity {
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
 }
+
+.opacity2 {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    padding: 20px;
+    border-bottom: 1px solid #0000;
+}
+
+.bookInfo {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.suites{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
   
 .invitation_heading {
     font-size: 32px;
     font-weight: bold;
     margin-bottom: 10px;
+    text-align: center;
 }
   
 .invitation_text {
@@ -51,16 +78,19 @@ body {
     border-radius: 1.5rem;
 }
 
-.slideOne {
-    background-image: url('../../assets/images/picture1.jpeg');
+.infoText{
+    color: #595E63;
+    text-align: center;
 }
 
-.slideTwo {
+.slideOne {
     background-image: url('../../assets/images/picture6.jpeg');
 }
 
-.slideThree {
-    background-image: url('../../assets/images/picture8.jpeg');
+.slideFive {
+    background-image: url('../../assets/images/picture7.jpeg');
+    background-size: cover;
+    background-position: center;
 }
 
 .botones {

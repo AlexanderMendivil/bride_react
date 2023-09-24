@@ -17,12 +17,11 @@ export const AppProvider = ({ children }: any) => {
       }, [])
       
       const setNewGuests = (guestsFunc: IGuest[] ) =>{
-            setGuest(guestsFunc!)
+            setGuest(guestsFunc)
         }
 
       const setNewAddedGuest = ( guest: IGuest ) =>{
           const newGuests = [...guests, guest]
-          console.log(newGuests)
             setGuest(newGuests)
       }
     

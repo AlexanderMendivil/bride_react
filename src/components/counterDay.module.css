@@ -15,7 +15,23 @@ p{
     align-items: center;
     margin: 0.5em;
 }
+
+.circle{
+    width: 50px;
+    height: 50px;
+    border-radius: 99%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(228,230,231, 0.9);
+}
+
+.number{
+color: rgb(89,89,89);
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 .text{
-color: rgb(247, 231, 195);
+color: rgb(228,230,231, 0.9);
 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

@@ -1,45 +1,23 @@
 import { useEffect, useState } from 'react';
-//import { Slide } from 'react-slideshow-image';
 import { IGuest } from '../interface/guest';
 import { getOneGuest } from '../apis/getOneUser';
 import { useParams } from 'react-router-dom';
-import { Button, CircularProgress } from '@mui/material';
+import { Box, Button, CircularProgress, AppBar } from '@mui/material';
 import { confirmInvite } from '../apis/confirmInvite';
 import slideShow from "../components/slideShow.module.css";
+import MenuIcon from '@mui/icons-material/Menu';
+import styled from '@emotion/styled';
+import { SlideFive, SlideFour, SlideSix, SlideThree, SlideTwo } from './slides';
 
-const SlideOne = ({ nombre }: { nombre: string }) => (
-  <div className={slideShow.slideOne} >
-    <div className={slideShow.opacity}>
-      <h1 className={slideShow.invitation_heading} >Bienvenid@ a nuestra boda {nombre}!</h1>
-      <p className={slideShow.invitation_text}>Celebrando a Andrea y Jose Ines</p>
-      <p className={slideShow.invitation_text}><b>Fecha:</b> 16 de febrero de 2024</p>
-      <p className={slideShow.invitation_text}><b>Lugar:</b> Hermosillo, Sonora</p>
-      <p className={slideShow.invitation_text}><i>"El amor une nuestras vidas, los invitamos a compartir nuestro día especial"</i></p>
-    </div>
-  </div>
-);
 
-const SlideTwo = () => (
-  <div className={slideShow.slideTwo} >
-    <div className={slideShow.opacity}>
-      <h2 className={slideShow.invitation_heading} >Detalles del evento</h2>
-      <p className={slideShow.invitation_text}><b>Itinerario:</b> Ceremonia a las 18:00, seguida de cóctel, cena y baile</p>
-      <p className={slideShow.invitation_text}><b>Código de vestimenta:</b> Etiqueta formal</p>
-      <p className={slideShow.invitation_text}><b>Regalos:</b> No es necesario, su presencia es nuestro mejor regalo :)</p>
-      <p className={slideShow.invitation_text}><b><i>#Andrea&Jose</i></b></p>
-    </div>
-  </div>
-);
+const ColorIcon = styled(MenuIcon)({
+  color: '#CFC199',
+})
 
-const SlideThree = () => (
-  <div className={slideShow.slideThree} >
-    <div className={slideShow.opacity}>
-      <h2 className={slideShow.invitation_heading} >¡Gracias!</h2>
-      <p className={slideShow.invitation_text}>Por favor, confirma tu asistencia antes del 1 de Junio</p>
-      <p className={slideShow.invitation_text}>¡Gracias por ser parte de nuestro día especial, esperamos verte pronto!</p>
-    </div>
-  </div>
-);
+const CustomButton = styled(Button)({
+  backgroundColor: '#CFC199',
+  color: '#FFFF',
+})
 
 export const SlideShow = () => {
 
@@ -80,22 +58,38 @@ export const SlideShow = () => {
     <>
       {guest ?
         <>
-          <div>
-            <SlideOne nombre={guest.nombre} />
+          <Box> 
+            <AppBar position="fixed" style={{backgroundColor: '#FFFF'}}>
+              <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Button aria-label='drawer'>
+                <ColorIcon />
+                </Button>              
+              </Box>
+            </AppBar>
+            
+            <div className={slideShow.slideOne} >
+              <div className={slideShow.opacity}>
+                <h1 className={slideShow.invitation_heading} >We are getting married</h1>
+                  <p className={slideShow.invitation_text}>16 de febrero de 2024</p>
+                  <CustomButton disabled={loadingSuccess} variant='outlined' color='success' onClick={confirmSuccess}>
+                    {loadingSuccess ? <CircularProgress size={20} /> : 'RSVP'}
+                  </CustomButton>
+    </div>
+  </div>
             <SlideTwo />
             <SlideThree />
+            <SlideFour/>
+            <SlideFive/>
+            <SlideSix/>
 
             <div className={slideShow.botones}>
               <div className={slideShow.opacity}>
-                <Button disabled={loadingSuccess} variant='outlined' color='success' onClick={confirmSuccess}>
-                  {loadingSuccess ? <CircularProgress size={20} /> : 'Aceptar'}
-                </Button>
                 <Button disabled={loadingError} variant='outlined' color='error' onClick={confirmError}>
                   {loadingError ? <CircularProgress size={20} /> : 'Rechazar'}
                 </Button>
               </div>
             </div>
-          </div>
+          </Box>
         </>
 
         :

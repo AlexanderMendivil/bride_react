@@ -35,25 +35,33 @@ export const CounterDay = () => {
     <div className={counterDay.container}>
 
         <div className={counterDay.subcontainer}>
-            <p className={counterDay.text}>{ days }</p>
+            <div className={counterDay.circle}>
+                <p className={counterDay.number}>{ days }</p>
+            </div>
             <p className={counterDay.text}>Días</p>
 
         </div>
 
         <div className={counterDay.subcontainer}>
-            <p className={counterDay.text}>{ hours }</p>
+            <div className={counterDay.circle}>
+                <p className={counterDay.number}>{ hours }</p>
+            </div>
             <p className={counterDay.text}>Horas</p>
 
         </div>
 
         <div className={counterDay.subcontainer}>
-            <p className={counterDay.text}>{ minutes }</p>
+            <div className={counterDay.circle}>
+                <p className={counterDay.number}>{ minutes }</p>
+            </div>
             <p className={counterDay.text}>Minutos</p>
 
         </div>
 
         <div className={counterDay.subcontainer}>
-            <p className={counterDay.text}>{ seconds }</p>
+            <div className={counterDay.circle}>
+                <p className={counterDay.number}>{ seconds }</p>
+            </div>
             <p className={counterDay.text}>Segundos</p>
 
         </div>

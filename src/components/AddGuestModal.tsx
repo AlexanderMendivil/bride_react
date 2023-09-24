@@ -26,29 +26,41 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
     const formik = useFormik({
         initialValues: {
             nombre: guest ? guest?.nombre : '',
-            num_invitados: guest ? guest?.num_invitados : 0,
+            num_invitados: guest ? guest?.num_invitados : 1,
             status: guest ? guest?.status : 'Pendiente',
             email: guest ? guest?.email : '',
             phone_number: guest ? guest?.phone_number : '',
         },
-        onSubmit: async (values) => {
+        onSubmit: async (values, { resetForm }) => {
             try{
+              const { status, ...rest } = values
                 setLoading(true)
                 if(!guest){
-                  const newGuest = {id: uuidv4(), ...values}
+                  const newGuest = {id: uuidv4(), status: 'Pendiente', ...rest}
                     await addGuest(newGuest)
                     setNewAddedGuest(newGuest)
                     setSuccessAdd(true)
+                    resetForm()
                 }else{
                     await updataGuest({id: guest.id, ...values})
-                    const newArray = guests.map(guestMap => guestMap.id === guest.id ? guest : guestMap);
+                    const newArray = guests.map(guestMap => guestMap.id === guest.id ? 
+                      {
+                        ...guest, 
+                        nombre: values.nombre,
+                        num_invitados: values.num_invitados,
+                        status: values.status,
+                        email: values.email,
+                        phone_number: values.phone_number,
+                      } : guestMap);
+
                     setNewGuests(newArray)
                     setSuccessEdit(true)
-
+                
                 }
             }catch(e){
                 setError(true)
             }finally{
+
                 setLoading(false)
                 setTimeout(()=> setError(false), 3000)
                 setTimeout(()=> setSuccessAdd(false), 3000)
@@ -60,11 +72,10 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
             
             nombre: Yup.string().matches(/^[a-zA-Z]+$/, 'Nombre debe contener solo letras').required('Campo requerido'),
             num_invitados: Yup.number().required('Campo requerido'),
-            status: Yup.string().required('Campo requerido'),
             email: Yup.string()
             .email('El correo no tiene un formato válido')
             .required('Campo requerido'),
-            phone_number: Yup.string().matches(/^\+?[1-9]\d{1,14}$/, 'Número de telefono invalido').required('Campo requerido'),
+            phone_number: Yup.string().matches(/^\+?[1-9]\d{1,14}$/, 'Número de telefono invalido').required('Campo requerido').min(10, 'El número de télefono deben ser de 10 números').max(10, 'El número de télefono deben ser de 10 números'),
         })
     });
   return (
@@ -117,7 +128,7 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                   label="Número de invitados"
                   type='number'
                   InputProps={{
-                    inputProps: { min: 0 }
+                    inputProps: { min: 1 }
                   }}
                   value={formik.values.num_invitados}
                   onChange={formik.handleChange}
@@ -125,19 +136,7 @@ export const AddGuestModal = ({ modalState, handleModal, guest, title }: AddGues
                   error={formik.touched.num_invitados && Boolean(formik.errors.num_invitados)}
                   helperText={formik.touched.num_invitados && formik.errors.num_invitados}
                   />
-                <FormControl fullWidth>
-                 <InputLabel id="status">Status</InputLabel>
-                 <Select
-                   id="status"
-                   name="status"
-                   value={formik.values.status}
-                   onChange={formik.handleChange}
-                   onBlur={formik.handleBlur}
-                   error={formik.touched.status && Boolean(formik.errors.status)}
-                 >
-                   <MenuItem value={'Pendiente'}>Pendiente</MenuItem>
-                 </Select>
-                </FormControl>
+              
                 </Grid>
 
                 <Grid item xs={6}>
